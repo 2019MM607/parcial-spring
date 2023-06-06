@@ -38,11 +38,9 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @OneToOne()
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
-
-    public Product() {
-    }
 
     public Product(String name, Double price, int stock, String image, String description, Category category) {
         this.name = name;
@@ -51,6 +49,9 @@ public class Product {
         this.image = image;
         this.description = description;
         this.category = category;
+    }
+
+    public Product() {
     }
 
     public Long getId() {

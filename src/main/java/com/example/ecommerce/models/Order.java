@@ -30,11 +30,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // @Generated
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Product> products;
 
     @Temporal(TemporalType.DATE)
     private Date createdAt;
@@ -42,14 +40,13 @@ public class Order {
     @Column(name = "total")
     private Double total;
 
-    public Order() {
-    }
-
-    public Order(User user, List<Product> products, Date createdAt, Double total) {
+    public Order(User user, Date createdAt, Double total) {
         this.user = user;
-        this.products = products;
         this.createdAt = createdAt;
         this.total = total;
+    }
+
+    public Order() {
     }
 
     @PrePersist
@@ -71,14 +68,6 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
     }
 
     public Date getCreatedAt() {
