@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.ecommerce.dao.ProductDao;
 import com.example.ecommerce.dao.UserDao;
 import com.example.ecommerce.models.User;
+import com.example.ecommerce.responseTypes.Authenticated;
 
 @Service
 public class UserService implements CrudOP<User> {
@@ -39,6 +40,14 @@ public class UserService implements CrudOP<User> {
     @Override
     public void delete(Long id) {
         userDao.deleteById(id);
+    }
+
+    public Authenticated login(String email, String password) {
+        User user = userDao.login(email, password);
+        if (user != null) {
+            return new Authenticated(true, user);
+        }
+        return new Authenticated(false, null);
     }
 
 }

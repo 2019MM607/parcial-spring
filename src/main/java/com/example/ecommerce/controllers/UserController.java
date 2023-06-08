@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ecommerce.models.User;
+import com.example.ecommerce.responseTypes.Authenticated;
 import com.example.ecommerce.services.CrudOP;
 import com.example.ecommerce.services.UserService;
 
@@ -28,7 +29,7 @@ import com.example.ecommerce.services.UserService;
 public class UserController {
 
     @Autowired
-    private CrudOP<User> userService;
+    private UserService userService;
 
     @GetMapping
     public List<User> getAll() {
@@ -61,6 +62,11 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         this.userService.delete(id);
+    }
+
+    @PostMapping("/login")
+    public Authenticated login(@RequestBody User user) {
+        return this.userService.login(user.getEmail(), user.getPassword());
     }
 
 }

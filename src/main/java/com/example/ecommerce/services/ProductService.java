@@ -39,4 +39,8 @@ public class ProductService implements CrudOP<Product> {
         productDao.deleteById(id);
     }
 
+    public List<Product> findByName(String name) {
+        return productDao.findByName(name);
+    }
+
 }

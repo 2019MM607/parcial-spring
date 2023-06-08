@@ -28,7 +28,7 @@ import com.example.ecommerce.services.ProductService;
 public class ProductController {
 
     @Autowired
-    private CrudOP<Product> productService;
+    private ProductService productService;
 
     @GetMapping
     public List<Product> getAll() {
@@ -64,6 +64,11 @@ public class ProductController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         this.productService.delete(id);
+    }
+
+    @GetMapping("/search/{name}")
+    public List<Product> findByName(@PathVariable String name) {
+        return this.productService.findByName(name);
     }
 
 }

@@ -40,6 +40,11 @@ public class OrderDetailsController {
         return this.orderService.findByOrder(id);
     }
 
+    @GetMapping("/client/{name}")
+    public OrderDetailsResponse getByClientName(@PathVariable String name) {
+        return this.orderService.findByClientName(name);
+    }
+
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public OrderDetails save(@RequestBody OrderDetails od) {

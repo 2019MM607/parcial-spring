@@ -12,6 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import com.example.ecommerce.dao.OrderDetailsDao;
+import com.example.ecommerce.dao.ProductDao;
 import com.example.ecommerce.models.OrderDetails;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.responseTypes.OrderDetailsResponse;
@@ -23,8 +24,13 @@ public class OrderDetailsService implements CrudOP<OrderDetails> {
     @Autowired
     private OrderDetailsDao orderDao;
 
+    @Autowired
+    private ProductDao productDao;
+
     @Override
     public OrderDetails save(OrderDetails t) {
+        Product product = productDao.findById(t.getProduct().getId()).get();
+        this.orderDao.updateStock(product.getStock() - t.getQuantity(), product.getId());
         return orderDao.save(t);
     }
 
@@ -42,12 +48,26 @@ public class OrderDetailsService implements CrudOP<OrderDetails> {
         List<OrderDetails> details = orderDao.findByOrder(id);
         List<ProductResponse> products = new ArrayList<>();
 
-        int quantity = 0;
+        double total = 0;
         for (OrderDetails orderDetails : details) {
             products.add(new ProductResponse(orderDetails.getProduct(), orderDetails.getQuantity()));
+            total += orderDetails.getProduct().getPrice() * orderDetails.getQuantity();
 
         }
-        return new OrderDetailsResponse(products, quantity);
+        return new OrderDetailsResponse(products, total, id);
+    }
+
+    public OrderDetailsResponse findByClientName(String name) {
+        List<OrderDetails> details = orderDao.findByClientName(name);
+        List<ProductResponse> products = new ArrayList<>();
+
+        double total = 0;
+        for (OrderDetails orderDetails : details) {
+            products.add(new ProductResponse(orderDetails.getProduct(), orderDetails.getQuantity()));
+            total += orderDetails.getProduct().getPrice() * orderDetails.getQuantity();
+
+        }
+        return new OrderDetailsResponse(products, total, details.get(0).getOrder().getId());
     }
 
     @Override
